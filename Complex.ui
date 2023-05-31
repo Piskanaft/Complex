@@ -15,7 +15,7 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>icon.png</normaloff>icon.png</iconset>
+    <normaloff>icons/icon.png</normaloff>icons/icon.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -28,7 +28,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <property name="iconSize">
        <size>
@@ -378,7 +378,7 @@
       <widget class="QWidget" name="tab_2">
        <attribute name="icon">
         <iconset>
-         <normaloff>linear-regression.png</normaloff>linear-regression.png</iconset>
+         <normaloff>icons/linear-regression.png</normaloff>icons/linear-regression.png</iconset>
        </attribute>
        <attribute name="title">
         <string>Орторегрессия</string>
@@ -607,7 +607,7 @@
       <widget class="QWidget" name="tab_3">
        <attribute name="icon">
         <iconset>
-         <normaloff>733042_orientation_512x512.png</normaloff>733042_orientation_512x512.png</iconset>
+         <normaloff>icons/733042_orientation_512x512.png</normaloff>icons/733042_orientation_512x512.png</iconset>
        </attribute>
        <attribute name="title">
         <string>Расстояние</string>

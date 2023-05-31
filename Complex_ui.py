@@ -26,7 +26,7 @@ class Ui_MainWindow(object):
             MainWindow.setObjectName(u"MainWindow")
         MainWindow.resize(838, 632)
         icon = QIcon()
-        icon.addFile(u"icon.png", QSize(), QIcon.Normal, QIcon.Off)
+        icon.addFile(u"icons/icon.png", QSize(), QIcon.Normal, QIcon.Off)
         MainWindow.setWindowIcon(icon)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
@@ -369,7 +369,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_3.addLayout(self.Orth_horizontalLayout)
 
         icon2 = QIcon()
-        icon2.addFile(u"linear-regression.png", QSize(), QIcon.Normal, QIcon.Off)
+        icon2.addFile(u"icons/linear-regression.png", QSize(), QIcon.Normal, QIcon.Off)
         self.tabWidget.addTab(self.tab_2, icon2, "")
         self.tab_3 = QWidget()
         self.tab_3.setObjectName(u"tab_3")
@@ -431,7 +431,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_6.addLayout(self.dist_horizontalLayout)
 
         icon3 = QIcon()
-        icon3.addFile(u"733042_orientation_512x512.png", QSize(), QIcon.Normal, QIcon.Off)
+        icon3.addFile(u"icons/733042_orientation_512x512.png", QSize(), QIcon.Normal, QIcon.Off)
         self.tabWidget.addTab(self.tab_3, icon3, "")
 
         self.verticalLayout_2.addWidget(self.tabWidget)
@@ -440,7 +440,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(2)
 
 
         QMetaObject.connectSlotsByName(MainWindow)

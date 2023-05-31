@@ -16,7 +16,7 @@ from matplotlib.offsetbox import AnchoredText
 from openpyxl import load_workbook 
 from math import sqrt,atan,tan,asin,floor, pi, sin, cos, degrees, radians, pow, atan2
 
-MyWindow, base_class = uic.loadUiType('./Complex.ui')
+MyWindow, base_class = uic.loadUiType(os.path.join(sys.path[0], 'Complex.ui'))
 class MainWindow(base_class):
     def __init__(self, *args,**kwargs):
         super().__init__(*args,**kwargs)
