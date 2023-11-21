@@ -35,4 +35,4 @@ def get_distance(lat1,long1, lat2, long2):
     # angledeg = (anglerad2*180.)/pi
     
     dist/=1000
-    return dists
+    return dist
