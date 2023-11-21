@@ -134,7 +134,7 @@ def LLS(mag,mag_values):
         except:
             print('Не могу посчитать a,b в методе LLS(2)')
             print(f"Если значение M = {round(M_co,1)} близко к максимальному значению в выборке ({max(mag_values)}), значит не получается посчитать методом LLS с заданным уровнем доверия")
-            return 'error'
+            return '-'
         X_i_array = 10**(-b*(M_i_array-M_co))
         # psi = np.array([sum(i**k*X_i_array) for k in [0,1,2]]) 
         psi = np.array([])

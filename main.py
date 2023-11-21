@@ -202,7 +202,7 @@ class Tab_orthoregress():
     def show_result(self):
         
         mw.ui.orth_result_textEdit.setText(
-        "Уравнение линии y= {}*x {:+}\n".format(round(self.a,3),round(self.b,3)) + 
+        "Уравнение линии:\ny= {}*x {:+}\n".format(round(self.a,3),round(self.b,3)) + 
         f"""{round(self.a_lower,4)} < a < {round(self.a_higher,4)}\n{round(self.b_higher,4)} < b < {round(self.b_lower,4)}\nΔθ= {round(self.delta_theta,4)} рад = {str(round(self.delta_theta*180/pi,4))}°\nσ(x)= {round(self.sigmax,3)}\nσ(y)= {round(self.sigmay,3)}\nr^2= {round(self.r**2,3)}"""
         )
 
@@ -262,12 +262,13 @@ class Tab_orthoregress():
         plt.grid()
         plt.show()
 
-class Tab_distances():
+class Tab_distances(): 
     def __init__(self, *args,**kwargs):
         mw.ui.dist_load_file_button.clicked.connect(self.load_catalog)
         mw.ui.dist_calculate_button.clicked.connect(self.write_to_file)
-    def load_catalog(self):
         
+    def load_catalog(self):
+        from distance_functions import get_distance
 
         file_path = qtw.QFileDialog.getOpenFileName(mw, 'Open File',filter="Excel Catalogs (*.xlsx)")
         if not file_path[0]:
@@ -279,60 +280,15 @@ class Tab_distances():
 
         wb = load_workbook(self.chosen_catalog_path)
         ws = wb.worksheets[0]
-
         
-        rad = 6372795
-        self.distances = []
-        for row in ws.iter_rows(2,ws.max_row):
-        
-
-            llat1 = row[1].value
-            llong1 = row[2].value
-            llat2 = row[3].value
-            llong2 = row[4].value
-            lat1 = llat1*pi/180.
-            lat2 = llat2*pi/180.
-            long1 = llong1*pi/180.
-            long2 = llong2*pi/180.
-
-            #косинусы и синусы широт и разницы долгот
-            cl1 = cos(lat1)
-            cl2 = cos(lat2)
-            sl1 = sin(lat1)
-            sl2 = sin(lat2)
-            delta = long2 - long1
-            cdelta = cos(delta)
-            sdelta = sin(delta)
-
-            #вычисления длины большого круга
-            y = sqrt(pow(cl2*sdelta,2)+pow(cl1*sl2-sl1*cl2*cdelta,2))
-            x = sl1*sl2+cl1*cl2*cdelta
-            ad = atan2(y,x)
-            dist = ad*rad
-
-            #вычисление начального азимута
-            x = (cl1*sl2) - (sl1*cl2*cdelta)
-            y = sdelta*cl2
-            z = degrees(atan(-y/x))
-
-            if (x < 0):
-                z = z+180.
-
-            z2 = (z+180.) % 360. - 180.
-            z2 = - radians(z2)
-            anglerad2 = z2 - ((2*pi)*floor((z2/(2*pi))) )
-            angledeg = (anglerad2*180.)/pi
-            
-            dist/=1000
-            self.distances.append('%.3f\n' % dist)
-
+        self.distances = ['%.3f\n' %  get_distance(row[1].value, row[2].value, row[3].value, row[4].value) for row in ws.iter_rows(2,ws.max_row)] #very sorry if that's not understandable in the future
 
         mw.ui.dist_catalog_size_label.setText(f'Пар точек: {len(self.distances)}') # TODO
         for widget in mw.ui.dist_rightMenu.findChildren((qtw.QPushButton)):
             widget.setEnabled(True)
     
     def write_to_file(self):
-        # with open(self.)
+        
         address = os.path.join(os.getcwd(), 'Distances.txt')
         with open(address, 'a',encoding='utf-8') as file1:
             file1.write(str(ctime()))
