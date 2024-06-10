@@ -15,6 +15,7 @@ import matplotlib.ticker as plticker
 from matplotlib.offsetbox import AnchoredText
 from openpyxl import load_workbook 
 from math import sqrt,atan,tan,asin,floor, pi, sin, cos, degrees, radians, pow, atan2
+from clusters_functions import get_distances_matrix,get_time_diff_matrix, get_dst_matrix, get_D, get_if_clustered_matrix, get_clusters, classify_ids_not_specific, year_fraction,calculate_lengths_frequencies
 
 MyWindow, base_class = uic.loadUiType(os.path.join(sys.path[0], 'Complex.ui'))
 class MainWindow(base_class):
@@ -25,10 +26,15 @@ class MainWindow(base_class):
         
         
 
+
   
     
         
+
+
+        
     
+
 
 class Tab_Magnitude_Completeness():
     def __init__(self, *args,**kwargs):
@@ -268,6 +274,7 @@ class Tab_distances():
         mw.ui.dist_calculate_button.clicked.connect(self.write_to_file)
         
     def load_catalog(self):
+        
         from distance_functions import get_distance
 
         file_path = qtw.QFileDialog.getOpenFileName(mw, 'Open File',filter="Excel Catalogs (*.xlsx)")
@@ -298,8 +305,154 @@ class Tab_distances():
                 
             file1.write("-----------------------------------------\n")
         qtw.QMessageBox.information(mw,'Успех',f'{len(self.distances)} расстояний записано')
+
+class Tab_clusters():
+    def __init__(self, *args, **kwargs):
         
+        mw.ui.cluster_load_file_button.clicked.connect(self.read_catalog)
+        mw.ui.cluster_calculate_button.clicked.connect(self.calculate_clusters)
+        mw.ui.cluster_plot_button.clicked.connect(self.plot_clusters)
+        mw.ui.cluster_write_to_excel_button.clicked.connect(self.write_to_excel)
+        mw.ui.cluster_plot_hist_button.clicked.connect(self.plot_hist)
+        # more
+    
+    def read_catalog(self):
+
+        file_path = qtw.QFileDialog.getOpenFileName(mw, 'Open File',filter="Excel Catalogs (*.xlsx)")
+        if not file_path[0]:
+            return None
+
+        self.filename_to_open = os.path.basename(file_path[0])
+        mw.ui.cluster_chosen_catalog_label.setText('Выбранный каталог: ' + self.filename_to_open)
+        self.chosen_catalog_path = file_path[0]
+        self.data = pd.read_excel(self.chosen_catalog_path)
+
+        self.latitudes = self.data['Lat']
+        self.longitudes = self.data['Lon']
+        self.dates =  self.data['Date']
+        self.times =  self.data['Origin time']
+        self.N = len(self.longitudes)
         
+        mw.ui.cluster_catalog_size_label.setText(f'Событий: {self.N}') 
+
+        mw.ui.cluster_calculate_button.setEnabled(True) # после чтения каталога появляется возможность считать кластеры
+        
+
+    def calculate_clusters(self):
+        
+        self.distance_matrix = get_distances_matrix(self.N, self.latitudes, self.longitudes)
+        self.datetimes, self.time_difference_matrix = get_time_diff_matrix(self.N, self.dates, self.times)
+        self.dst_matrix = get_dst_matrix(self.N, self.distance_matrix, self.time_difference_matrix)
+        self.D = get_D(self.dst_matrix)
+        self.if_clustered_matrix=  get_if_clustered_matrix(self.N, self.dst_matrix, self.D)
+        self.Clusters = get_clusters(self.if_clustered_matrix)
+        
+        self.ids_of_swarms_exact, self.ids_of_swarms, self.ids_not_swarms = classify_ids_not_specific(self.Clusters)
+        self.N_swarms = len(self.ids_of_swarms_exact)
+
+        for widget in mw.ui.cluster_rightMenu.findChildren((qtw.QPushButton, qtw.QTextEdit, qtw.QCheckBox, qtw.QRadioButton )):
+            widget.setEnabled(True)
+
+        self.fill_result_textEdit()
+        
+
+    def fill_result_textEdit(self):
+        Text=f'Найдено {self.N_swarms} роёв\n'
+        ML = self.data['ML']
+        for i in range(self.N_swarms):
+            N_events = len(self.ids_of_swarms_exact[i])
+            min_lat = min(self.latitudes[self.ids_of_swarms_exact[i]])
+            max_lat = max(self.latitudes[self.ids_of_swarms_exact[i]])
+            min_lon = min(self.longitudes[self.ids_of_swarms_exact[i]])
+            max_lon = max(self.longitudes[self.ids_of_swarms_exact[i]])
+            min_ML = min(ML[self.ids_of_swarms_exact[i]])
+            max_ML = max(ML[self.ids_of_swarms_exact[i]])
+            Text+=f'{i+1})\nЧисло событий: {N_events}\nШирота: {min_lat}-{max_lat}\nДолгота: {min_lon}-{max_lon}\nML: {min_ML}-{max_ML}\n'
+            
+        mw.ui.cluster_result_textEdit.setText(Text)
+
+
+    def plot_clusters(self):
+        if mw.ui.cluster_Longitude_time_radioButton.isChecked():
+            self.plot_clusters_long_time()
+        else:
+            self.plot_clusters_long_lat()
+
+    def plot_clusters_long_time(self):
+        
+        Year_fractions_swarms = [year_fraction(my_datetime) for my_datetime in self.datetimes[self.ids_of_swarms] ]
+        Year_fractions_not_swarms = [year_fraction(my_datetime) for my_datetime in self.datetimes[self.ids_not_swarms] ]
+        Year_fractions_all = [year_fraction(my_datetime) for my_datetime in self.datetimes]
+        fig, ax = plt.subplots()
+       
+
+        plt.scatter(self.longitudes[self.ids_not_swarms], Year_fractions_not_swarms, color='blue')
+        plt.scatter(self.longitudes[self.ids_of_swarms], Year_fractions_swarms, color='red')
+
+        
+
+        if mw.ui.cluster_if_plot_ids_checkbox.isChecked():
+            for i in range(self.N):    # текстовые подписи индексов
+                plt.text(self.longitudes[i], Year_fractions_all[i],i,fontsize=10)
+        
+        plt.grid()
+        plt.yticks(np.arange(min(self.dates).year, max(self.dates).year+2,1),size=25)
+        plt.xticks(size=25)
+        plt.ylabel('Год',size=30)
+        plt.xlabel('Долгота, °',size=30)
+        ax.ticklabel_format(useOffset=False)
+        plt.xlim(-10, 135)
+        plt.ylim(min(self.dates).year-1, max(self.dates).year+1.5)
+        plt.show()
+
+    def plot_clusters_long_lat(self):
+        fig, ax = plt.subplots()
+        plt.scatter(self.longitudes[self.ids_not_swarms], self.latitudes[self.ids_not_swarms], color='blue')
+        plt.scatter(self.longitudes[self.ids_of_swarms], self.latitudes[self.ids_of_swarms], color='red')   # географическая плоскость
+
+        if mw.ui.cluster_if_plot_ids_checkbox.isChecked():
+            for i in range(self.N):    # текстовые подписи индексов
+                plt.text(self.longitudes[i], self.latitudes[i],i,fontsize=10)
+
+        plt.ylabel('Широта, °',size=30)
+        plt.xlabel('Долгота, °',size=30)
+        plt.xticks(size = 25)
+        plt.yticks(size = 25)
+        plt.grid()
+        plt.show()
+
+    def plot_hist(self):
+        lengths,bins = calculate_lengths_frequencies(self.Clusters) 
+        n, bins, patches = plt.hist(lengths,bins=bins)
+        print(n)
+        print(bins)
+        plt.xlabel('Событий в кластере',size=30)
+        plt.ylabel('Количество кластеров',size=30)
+        plt.xticks(bins+0.5,size=25) #целые числа начиная с 1
+        plt.yticks(n,size=25)  # количества кластеров, set
+        for i,p in zip(np.arange(0,max(bins),1),patches):  #цвет слева оранжевый, справа красный
+            if i<7:
+                plt.setp(p, 'facecolor', 'orange', edgecolor='black')
+            else:
+                plt.setp(p, 'facecolor', 'red', edgecolor='black')
+        plt.show()
+    
+
+    
+    def write_to_excel(self):
+        #TODO отрегулировать ширину полей
+        
+        N_swarms = len(self.ids_of_swarms_exact)
+        with pd.ExcelWriter('Calculated_clusters.xlsx') as writer:
+            for i in range(N_swarms):
+                df_cur = self.data.iloc[self.ids_of_swarms_exact[i]] # выделяем те строки, которые принадлежат одному рою
+                df_cur['Date'] = pd.to_datetime(df_cur['Date']) # переводим в тип датавремя
+                df_cur['Date']=df_cur['Date'].dt.strftime('%d.%m.%Y') # чтобы совпадал формат в экселе
+                df_cur.drop(df_cur.filter(regex='Unnamed').columns, axis=1, inplace=True) # удаляем лишние столбы без названия
+                df_cur.to_excel(writer, sheet_name=f'swarm_{i+1}') # записываем в лист с названием swarm
+
+
+
 
         
         
@@ -322,5 +475,8 @@ if __name__ == '__main__':
     Tab0 = Tab_Magnitude_Completeness()
     Tab1 = Tab_orthoregress()
     Tab2 = Tab_distances()
+    Tab3 = Tab_clusters()
     mw.show()
     sys.exit(app.exec_())
+
+    #[363, 611, 676, 613, 1189, 1188, 1167, 531, 533, 530, 612, 775, 677]

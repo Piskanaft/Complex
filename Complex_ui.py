@@ -17,8 +17,8 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QCheckBox, QFormLayout, QFrame,
     QHBoxLayout, QLabel, QLayout, QLineEdit,
-    QMainWindow, QPushButton, QSizePolicy, QTabWidget,
-    QTextEdit, QVBoxLayout, QWidget)
+    QMainWindow, QPushButton, QRadioButton, QSizePolicy,
+    QTabWidget, QTextEdit, QVBoxLayout, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -30,8 +30,8 @@ class Ui_MainWindow(object):
         MainWindow.setWindowIcon(icon)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
-        self.verticalLayout_2 = QVBoxLayout(self.centralwidget)
-        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
+        self.verticalLayout_5 = QVBoxLayout(self.centralwidget)
+        self.verticalLayout_5.setObjectName(u"verticalLayout_5")
         self.tabWidget = QTabWidget(self.centralwidget)
         self.tabWidget.setObjectName(u"tabWidget")
         self.tabWidget.setTabPosition(QTabWidget.North)
@@ -348,6 +348,10 @@ class Ui_MainWindow(object):
         self.orth_result_textEdit = QTextEdit(self.orth_rightMenu)
         self.orth_result_textEdit.setObjectName(u"orth_result_textEdit")
         self.orth_result_textEdit.setEnabled(False)
+        font4 = QFont()
+        font4.setPointSize(11)
+        font4.setBold(True)
+        self.orth_result_textEdit.setFont(font4)
         self.orth_result_textEdit.setReadOnly(True)
 
         self.Orth_RightMenu.addWidget(self.orth_result_textEdit)
@@ -433,14 +437,127 @@ class Ui_MainWindow(object):
         icon3 = QIcon()
         icon3.addFile(u"icons/733042_orientation_512x512.png", QSize(), QIcon.Normal, QIcon.Off)
         self.tabWidget.addTab(self.tab_3, icon3, "")
+        self.tab_4 = QWidget()
+        self.tab_4.setObjectName(u"tab_4")
+        sizePolicy6.setHeightForWidth(self.tab_4.sizePolicy().hasHeightForWidth())
+        self.tab_4.setSizePolicy(sizePolicy6)
+        self.horizontalLayoutWidget = QWidget(self.tab_4)
+        self.horizontalLayoutWidget.setObjectName(u"horizontalLayoutWidget")
+        self.horizontalLayoutWidget.setGeometry(QRect(0, 10, 811, 541))
+        self.horizontalLayout_8 = QHBoxLayout(self.horizontalLayoutWidget)
+        self.horizontalLayout_8.setObjectName(u"horizontalLayout_8")
+        self.horizontalLayout_8.setContentsMargins(0, 0, 0, 0)
+        self.cluster_leftMenu = QWidget(self.horizontalLayoutWidget)
+        self.cluster_leftMenu.setObjectName(u"cluster_leftMenu")
+        self.Orth_LeftMenu_2 = QVBoxLayout(self.cluster_leftMenu)
+        self.Orth_LeftMenu_2.setObjectName(u"Orth_LeftMenu_2")
+        self.cluster_load_file_button = QPushButton(self.cluster_leftMenu)
+        self.cluster_load_file_button.setObjectName(u"cluster_load_file_button")
+        sizePolicy7.setHeightForWidth(self.cluster_load_file_button.sizePolicy().hasHeightForWidth())
+        self.cluster_load_file_button.setSizePolicy(sizePolicy7)
+        self.cluster_load_file_button.setMinimumSize(QSize(0, 50))
+        self.cluster_load_file_button.setMaximumSize(QSize(99999, 70))
 
-        self.verticalLayout_2.addWidget(self.tabWidget)
+        self.Orth_LeftMenu_2.addWidget(self.cluster_load_file_button)
+
+        self.cluster_chosen_catalog_label = QLabel(self.cluster_leftMenu)
+        self.cluster_chosen_catalog_label.setObjectName(u"cluster_chosen_catalog_label")
+        sizePolicy8.setHeightForWidth(self.cluster_chosen_catalog_label.sizePolicy().hasHeightForWidth())
+        self.cluster_chosen_catalog_label.setSizePolicy(sizePolicy8)
+        self.cluster_chosen_catalog_label.setFont(font)
+        self.cluster_chosen_catalog_label.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignTop)
+        self.cluster_chosen_catalog_label.setWordWrap(True)
+
+        self.Orth_LeftMenu_2.addWidget(self.cluster_chosen_catalog_label)
+
+        self.cluster_catalog_size_label = QLabel(self.cluster_leftMenu)
+        self.cluster_catalog_size_label.setObjectName(u"cluster_catalog_size_label")
+        self.cluster_catalog_size_label.setFont(font3)
+        self.cluster_catalog_size_label.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignTop)
+
+        self.Orth_LeftMenu_2.addWidget(self.cluster_catalog_size_label)
+
+
+        self.horizontalLayout_8.addWidget(self.cluster_leftMenu)
+
+        self.cluster_rightMenu = QWidget(self.horizontalLayoutWidget)
+        self.cluster_rightMenu.setObjectName(u"cluster_rightMenu")
+        self.verticalLayout_2 = QVBoxLayout(self.cluster_rightMenu)
+        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
+        self.cluster_calculate_button = QPushButton(self.cluster_rightMenu)
+        self.cluster_calculate_button.setObjectName(u"cluster_calculate_button")
+        self.cluster_calculate_button.setEnabled(False)
+
+        self.verticalLayout_2.addWidget(self.cluster_calculate_button)
+
+        self.cluster_result_textEdit = QTextEdit(self.cluster_rightMenu)
+        self.cluster_result_textEdit.setObjectName(u"cluster_result_textEdit")
+        self.cluster_result_textEdit.setEnabled(False)
+        self.cluster_result_textEdit.setFont(font4)
+        self.cluster_result_textEdit.setReadOnly(True)
+
+        self.verticalLayout_2.addWidget(self.cluster_result_textEdit)
+
+        self.cluster_write_to_excel_button = QPushButton(self.cluster_rightMenu)
+        self.cluster_write_to_excel_button.setObjectName(u"cluster_write_to_excel_button")
+        self.cluster_write_to_excel_button.setEnabled(False)
+
+        self.verticalLayout_2.addWidget(self.cluster_write_to_excel_button)
+
+        self.cluster_plot_hist_button = QPushButton(self.cluster_rightMenu)
+        self.cluster_plot_hist_button.setObjectName(u"cluster_plot_hist_button")
+        self.cluster_plot_hist_button.setEnabled(False)
+
+        self.verticalLayout_2.addWidget(self.cluster_plot_hist_button)
+
+        self.cluster_if_plot_ids_checkbox = QCheckBox(self.cluster_rightMenu)
+        self.cluster_if_plot_ids_checkbox.setObjectName(u"cluster_if_plot_ids_checkbox")
+        self.cluster_if_plot_ids_checkbox.setEnabled(False)
+
+        self.verticalLayout_2.addWidget(self.cluster_if_plot_ids_checkbox)
+
+        self.frame_3 = QFrame(self.cluster_rightMenu)
+        self.frame_3.setObjectName(u"frame_3")
+        self.frame_3.setFrameShape(QFrame.StyledPanel)
+        self.frame_3.setFrameShadow(QFrame.Raised)
+        self.verticalLayout_6 = QVBoxLayout(self.frame_3)
+        self.verticalLayout_6.setObjectName(u"verticalLayout_6")
+        self.cluster_Longitude_time_radioButton = QRadioButton(self.frame_3)
+        self.cluster_Longitude_time_radioButton.setObjectName(u"cluster_Longitude_time_radioButton")
+        self.cluster_Longitude_time_radioButton.setEnabled(False)
+        self.cluster_Longitude_time_radioButton.setChecked(True)
+
+        self.verticalLayout_6.addWidget(self.cluster_Longitude_time_radioButton)
+
+        self.cluster_Geography_radioButton = QRadioButton(self.frame_3)
+        self.cluster_Geography_radioButton.setObjectName(u"cluster_Geography_radioButton")
+        self.cluster_Geography_radioButton.setEnabled(False)
+
+        self.verticalLayout_6.addWidget(self.cluster_Geography_radioButton)
+
+
+        self.verticalLayout_2.addWidget(self.frame_3)
+
+        self.cluster_plot_button = QPushButton(self.cluster_rightMenu)
+        self.cluster_plot_button.setObjectName(u"cluster_plot_button")
+        self.cluster_plot_button.setEnabled(False)
+
+        self.verticalLayout_2.addWidget(self.cluster_plot_button)
+
+
+        self.horizontalLayout_8.addWidget(self.cluster_rightMenu)
+
+        icon4 = QIcon()
+        icon4.addFile(u"icons/clusters.png", QSize(), QIcon.Normal, QIcon.Off)
+        self.tabWidget.addTab(self.tab_4, icon4, "")
+
+        self.verticalLayout_5.addWidget(self.tabWidget)
 
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
 
-        self.tabWidget.setCurrentIndex(2)
+        self.tabWidget.setCurrentIndex(3)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -479,5 +596,16 @@ class Ui_MainWindow(object):
         self.dist_catalog_size_label.setText("")
         self.dist_calculate_button.setText(QCoreApplication.translate("MainWindow", u"\u0417\u0430\u043f\u0438\u0441\u0430\u0442\u044c \u0432 \u0444\u0430\u0439\u043b", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), QCoreApplication.translate("MainWindow", u"\u0420\u0430\u0441\u0441\u0442\u043e\u044f\u043d\u0438\u0435", None))
+        self.cluster_load_file_button.setText(QCoreApplication.translate("MainWindow", u"\u0417\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044c \u043a\u0430\u0442\u0430\u043b\u043e\u0433", None))
+        self.cluster_chosen_catalog_label.setText(QCoreApplication.translate("MainWindow", u"\u041a\u0430\u0442\u0430\u043b\u043e\u0433 \u043d\u0435 \u0432\u044b\u0431\u0440\u0430\u043d", None))
+        self.cluster_catalog_size_label.setText("")
+        self.cluster_calculate_button.setText(QCoreApplication.translate("MainWindow", u"\u0420\u0430\u0441\u0441\u0447\u0438\u0442\u0430\u0442\u044c \u043a\u043b\u0430\u0441\u0442\u0435\u0440\u044b", None))
+        self.cluster_write_to_excel_button.setText(QCoreApplication.translate("MainWindow", u"\u0417\u0430\u043f\u0438\u0441\u0430\u0442\u044c \u0432 Excel", None))
+        self.cluster_plot_hist_button.setText(QCoreApplication.translate("MainWindow", u"\u0413\u0438\u0441\u0442\u043e\u0433\u0440\u0430\u043c\u043c\u0430 \u0440\u0430\u0441\u043f\u0440\u0435\u0434\u0435\u043b\u0435\u043d\u0438\u044f", None))
+        self.cluster_if_plot_ids_checkbox.setText(QCoreApplication.translate("MainWindow", u"\u0418\u0434\u0435\u043d\u0442\u0438\u0444\u0438\u043a\u0430\u0442\u043e\u0440\u044b \u043d\u0430 \u0440\u0438\u0441\u0443\u043d\u043a\u0435", None))
+        self.cluster_Longitude_time_radioButton.setText(QCoreApplication.translate("MainWindow", u"\u0414\u043e\u043b\u0433\u043e\u0442\u0430 - \u0432\u0440\u0435\u043c\u044f", None))
+        self.cluster_Geography_radioButton.setText(QCoreApplication.translate("MainWindow", u"\u0414\u043e\u043b\u0433\u043e\u0442\u0430 - \u0448\u0438\u0440\u043e\u0442\u0430", None))
+        self.cluster_plot_button.setText(QCoreApplication.translate("MainWindow", u"\u0420\u0438\u0441\u0443\u043d\u043e\u043a", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_4), QCoreApplication.translate("MainWindow", u"\u041a\u043b\u0430\u0441\u0442\u0435\u0440\u044b", None))
     # retranslateUi
 
