@@ -4,6 +4,8 @@ from distance_functions import get_distance
 from math import sqrt
 
 
+
+
 def get_distances_matrix(N, latitudes, longitudes):
     distances_matrix = np.zeros((N,N))
     for i in range(N):
@@ -25,6 +27,7 @@ def get_time_diff_matrix(N, dates, times):
     return datetimes, time_diff_matrix
 
 def get_dst_matrix(N, distances_matrix, time_diff_matrix):
+   
     C=1
     dst_matrix = np.zeros((N, N))
     for i in range(N):
@@ -39,12 +42,13 @@ def get_minimum_dst(dst_matrix):
     return minimum_dst
 
 def get_D(dst_matrix):
+    
     minimum_dst = get_minimum_dst(dst_matrix)
     S1 = np.median(minimum_dst)
     print(S1)
     D = 9.4 * sqrt(S1) - 25.2
     print(D)
-    return D
+    return S1, D
 
 def get_if_clustered_matrix(N, dst_matrix, D):
     if_clustered_matrix = np.empty((N,N))

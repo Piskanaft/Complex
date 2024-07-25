@@ -343,7 +343,7 @@ class Tab_clusters():
         self.distance_matrix = get_distances_matrix(self.N, self.latitudes, self.longitudes)
         self.datetimes, self.time_difference_matrix = get_time_diff_matrix(self.N, self.dates, self.times)
         self.dst_matrix = get_dst_matrix(self.N, self.distance_matrix, self.time_difference_matrix)
-        self.D = get_D(self.dst_matrix)
+        self.S1, self.D = get_D(self.dst_matrix)
         self.if_clustered_matrix=  get_if_clustered_matrix(self.N, self.dst_matrix, self.D)
         self.Clusters = get_clusters(self.if_clustered_matrix)
         
@@ -357,7 +357,8 @@ class Tab_clusters():
         
 
     def fill_result_textEdit(self):
-        Text=f'Найдено {self.N_swarms} роёв\n'
+        
+        Text=f'S1 = {self.S1}\nD = {self.D}\nНайдено {self.N_swarms} роёв\n'
         ML = self.data['ML']
         for i in range(self.N_swarms):
             N_events = len(self.ids_of_swarms_exact[i])
